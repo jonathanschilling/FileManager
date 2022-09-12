@@ -1,0 +1,19 @@
+components:
+0) FileFolderObject
+1) MainWindow
+2) DirView
+	2a) DirSymbolView
+	2b) DirListView
+	2c) DirDetailedView
+3) HelperFunctions
+4) Methods
+	7a) new
+	7b) copy
+	7c) move
+	7d) delete
+	7e) info
+	
+actions:
+drag and drop
+unfold folders
+show a copy process progress window
