@@ -4,7 +4,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.geom.Rectangle2D;
+//import java.awt.geom.Rectangle2D;
 import java.util.LinkedList;
 
 import de.labathome.filemanager.HelperFunctions.ViewMode;
@@ -15,38 +15,37 @@ public class ListViewItem {
 	public LinkedList<String> properties;
 	public Image icon;
 	private Preferences prefs;
-	private Point loc;
+//	private Point loc;
 	private ListView listView;
 	String filename = "";
 
 	/**
 	 * contructor for an item to be showed in a list view
+	 *
 	 * @param centralPrefs - the preferences of the file mananger
-	 * @param lv - in which list view to operate
+	 * @param lv           - in which list view to operate
 	 */
 	public ListViewItem(Preferences centralPrefs, ListView lv) {
 		prefs = centralPrefs;
 		listView = lv;
 	}
 
-
-
 	/**
 	 * prepare an item and store the computed rects in the file or folder object
-	 * @param g - which Graphics to use
+	 *
+	 * @param g   - which Graphics to use
 	 * @param ffo - which file or folder object to use
-	 * @param p - where to originate the item
+	 * @param p   - where to originate the item
 	 */
 	public void prepare(Graphics g, FileFolderObject ffo, Point p) {
 
 		icon = HelperFunctions.getIcon(ffo, prefs.currentViewMode);
-		loc = p;
+//		loc = p;
 
 		int iconSize = 16;
 		int textFreeSpace = 0;
 		int rowHeight = 16;
 		int rowFreeSpace = 5;
-
 
 		int iconX = 0, iconY = 0, textX = 0, textY = 0;
 		filename = ffo.getName();
@@ -60,7 +59,7 @@ public class ListViewItem {
 		Rectangle nameRect = HelperFunctions.getStringRect(g, filename);
 		Rectangle iconRect = new Rectangle();
 		Rectangle arrowRect = new Rectangle();
-		
+
 		switch (prefs.currentViewMode) {
 		case SymbolView:
 
@@ -71,7 +70,7 @@ public class ListViewItem {
 			iconX = p.x;
 			iconY = p.y;
 
-			textX = p.x + (iconSize / 2) - (int)(nameRect.getWidth() / 2);
+			textX = p.x + (iconSize / 2) - (int) (nameRect.getWidth() / 2);
 			textY = p.y + iconSize + textFreeSpace + rowHeight;
 
 			break;
@@ -88,8 +87,7 @@ public class ListViewItem {
 
 				if (ffo.isUnfolded()) {
 					g.drawImage(HelperFunctions.arrowUnfolded, p.x, p.y, listView);
-				}
-				else {
+				} else {
 					g.drawImage(HelperFunctions.arrowFolded, p.x, p.y, listView);
 				}
 			}
@@ -121,7 +119,8 @@ public class ListViewItem {
 		}
 
 		nameRect = HelperFunctions.getStringRect(g, filename);
-		nameRect = new Rectangle(textX - 3, textY - (int)nameRect.getHeight() - 1, (int)nameRect.getWidth() + 6, (int)nameRect.getHeight() + 6);
+		nameRect = new Rectangle(textX - 3, textY - (int) nameRect.getHeight() - 1, (int) nameRect.getWidth() + 6,
+				(int) nameRect.getHeight() + 6);
 		iconRect = new Rectangle(iconX, iconY, iconSize, iconSize);
 
 		ffo.setIconRect(iconRect);
@@ -130,17 +129,19 @@ public class ListViewItem {
 	}
 
 	/**
-	 * get the precomputed rects from the file or folde robject and paint the item accordingly
-	 * @param g - which Graphics to use
+	 * get the precomputed rects from the file or folde robject and paint the item
+	 * accordingly
+	 *
+	 * @param g   - which Graphics to use
 	 * @param ffo - which file or folder to paint
 	 */
 	public void paint(Graphics g, FileFolderObject ffo) {
 
 		Rectangle nameRect = ffo.getNameRect();
 		Rectangle iconRect = ffo.getIconRect();
-		
+
 		filename = ffo.getName().split("/")[ffo.getName().split("/").length - 1];
-		
+
 		// clip filename to 14 chars to fir inside the grid
 		if (prefs.currentViewMode == ViewMode.SymbolView && filename.length() > 14) {
 			filename = String.copyValueOf(filename.toCharArray(), 0, 12) + "...";

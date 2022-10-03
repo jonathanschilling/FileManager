@@ -24,19 +24,16 @@ public class FileManager extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 
-	
-
-	//FileFolderObject currentFileFolder;
-	//ViewMode currentViewMode;
+	// FileFolderObject currentFileFolder;
+	// ViewMode currentViewMode;
 
 	PreferencesDialog prefsDialog;
 
 	/**
 	 * constructor - makes a new FileManager with title string given
-	 * 
+	 *
 	 * @param mainTitle
 	 */
-
 	public FileManager(String mainTitle) {
 
 		super(mainTitle);
@@ -44,15 +41,13 @@ public class FileManager extends JFrame implements ActionListener {
 		this.mainTitle = mainTitle;
 
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		
-		
+
 		this.setupUi();
 		this.setup();
 	}
-	
 
 	// ui vars
-	 
+
 	ListView listView;
 
 	ImageIcon folderIcon;
@@ -72,7 +67,7 @@ public class FileManager extends JFrame implements ActionListener {
 	JMenuItem viewDetailedModeItem;
 
 	String mainTitle;
-	
+
 	JScrollPane scrollPane;
 
 	/**
@@ -130,10 +125,12 @@ public class FileManager extends JFrame implements ActionListener {
 		listView = new ListView(prefsDialog.getPrefs());
 
 		Container content = this.getContentPane();
-		scrollPane = new JScrollPane(listView, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		//scrollPane.setMouseWheelIncrement(20); // scroll more than 1 pixel per mouseWheelEvent
+		scrollPane = new JScrollPane(listView, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		// scrollPane.setMouseWheelIncrement(20); // scroll more than 1 pixel per
+		// mouseWheelEvent
 		content.add(scrollPane, BorderLayout.CENTER);
-		
+
 		this.pack();
 
 		this.setVisible(true);
@@ -142,7 +139,6 @@ public class FileManager extends JFrame implements ActionListener {
 	}
 
 	// end ui vars
-	
 
 	/**
 	 * load other things than the user interface, f.ex. the used icons
@@ -150,7 +146,7 @@ public class FileManager extends JFrame implements ActionListener {
 	void setup() {
 
 		HelperFunctions.loadIcons();
-		
+
 		System.out.println("FileManager::setup() finished.");
 	}
 
@@ -158,9 +154,9 @@ public class FileManager extends JFrame implements ActionListener {
 	 * listen to ui actions
 	 */
 	public void actionPerformed(ActionEvent e) {
-		
+
 		if (e.getSource() == fileOpenItem) {
-			
+
 			// open new directory as "root dir" for this FileManager
 			JFileChooser fc = new JFileChooser();
 			fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -170,28 +166,28 @@ public class FileManager extends JFrame implements ActionListener {
 				prefsDialog.getPrefs().currentDir = new FileFolderObject(fc.getSelectedFile().getPath(), 0);
 			}
 		}
-		
+
 		else if (e.getSource() == fileQuitItem) {
 
 			// quit FileManager
 			System.out.println("FileManager now exits.");
 			this.dispose();
 		}
-		
+
 		else if (e.getSource() == editPreferencesItem) {
 
 			// open Preferences Dialog
-			prefsDialog.showMe();	
+			prefsDialog.showMe();
 		}
-		
+
 		else if (e.getSource() == viewSymbolModeItem) {
 			prefsDialog.getPrefs().currentViewMode = HelperFunctions.ViewMode.SymbolView;
 		}
-		
+
 		else if (e.getSource() == viewListModeItem) {
 			prefsDialog.getPrefs().currentViewMode = HelperFunctions.ViewMode.ListView;
 		}
-		
+
 		else if (e.getSource() == viewDetailedModeItem) {
 			prefsDialog.getPrefs().currentViewMode = HelperFunctions.ViewMode.DetailedView;
 		}
@@ -212,6 +208,5 @@ public class FileManager extends JFrame implements ActionListener {
 	public Dimension getPreferredSize() {
 		return new Dimension(1024, 768);
 	}
-	
-	
+
 }

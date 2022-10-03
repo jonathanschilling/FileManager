@@ -6,28 +6,24 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.io.*;
 import java.util.LinkedList;
-import java.nio.channels.FileChannel; 
+import java.nio.channels.FileChannel;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
  * Class which provides methods to manage files
+ *
  * @author Jonathan Schilling & Veronika Polke
  *
  */
-
 public class FileFolderObject implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * absolute path of file
 	 */
-
 	private String name = "";
 
 	/**
@@ -38,13 +34,11 @@ public class FileFolderObject implements Serializable {
 	/**
 	 * size of file or count of contained objects if folder
 	 */
-
 	private long size = 0;
 
 	/**
 	 * last change of file or folder
 	 */
-
 	private Date lastChange;
 
 	private String owner = "";
@@ -55,19 +49,16 @@ public class FileFolderObject implements Serializable {
 	/**
 	 * contains contents of folder
 	 */
-
 	private LinkedList<FileFolderObject> contents = new LinkedList<FileFolderObject>();
 
 	/**
 	 * contains level
 	 */
-
 	private int level = 0;
 
 	/**
 	 * wether the ffo is selected by a mouse-dragged rectangle
 	 */
-
 	private boolean isSelected = false;
 
 	/**
@@ -83,25 +74,42 @@ public class FileFolderObject implements Serializable {
 	private Rectangle nameRect;
 	private Rectangle arrowRect;
 
-	public Rectangle getIconRect() { return iconRect; }
-	public void setIconRect(Rectangle r) { iconRect = r; }
+	CopyProgress prog;
+	boolean showDialog = true;
 
-	public Rectangle getNameRect() { return nameRect; }
-	public void setNameRect(Rectangle r) { nameRect = r; }
+	public Rectangle getIconRect() {
+		return iconRect;
+	}
 
-	public Rectangle getArrowRect() { return arrowRect; }
-	public void setArrowRect(Rectangle r) { arrowRect = r; }
+	public void setIconRect(Rectangle r) {
+		iconRect = r;
+	}
+
+	public Rectangle getNameRect() {
+		return nameRect;
+	}
+
+	public void setNameRect(Rectangle r) {
+		nameRect = r;
+	}
+
+	public Rectangle getArrowRect() {
+		return arrowRect;
+	}
+
+	public void setArrowRect(Rectangle r) {
+		arrowRect = r;
+	}
 
 	public boolean isDragged = false;
 
 	/**
 	 * constructor of FileFolderObject
-	 * @param name - path to directory
+	 *
+	 * @param name  - path to directory
 	 * @param level - level
 	 */
-
-
-	public FileFolderObject (String name, int level) {
+	public FileFolderObject(String name, int level) {
 
 		// file relevant info
 		this.name = name;
@@ -112,12 +120,11 @@ public class FileFolderObject implements Serializable {
 
 		if (this.isDirectory) {
 			size = javaFile.listFiles().length;
-		}
-		else {
+		} else {
 			size = javaFile.length();
 		}
 
-		this.lastChange = new Date(javaFile.lastModified());	
+		this.lastChange = new Date(javaFile.lastModified());
 
 		owner = javaFile.toString();
 
@@ -132,7 +139,6 @@ public class FileFolderObject implements Serializable {
 		this.isSelected = false;
 		this.isUnfolded = false;
 		this.isDragged = false;
-
 
 	}
 
@@ -159,82 +165,122 @@ public class FileFolderObject implements Serializable {
 
 	/**
 	 * getter method for name
+	 *
 	 * @return name of file or folder
 	 */
-	public String getName() { return name; }
+	public String getName() {
+		return name;
+	}
 
 	/**
 	 * getter method for isFileOrFolder
+	 *
 	 * @return if file or folder
 	 */
-	public boolean isDirectory() { return isDirectory; }
+	public boolean isDirectory() {
+		return isDirectory;
+	}
 
 	/**
 	 * getter method for size
+	 *
 	 * @return size of current file or folder
 	 */
-	public long getSize() {	return size; }
+	public long getSize() {
+		return size;
+	}
 
 	/**
 	 * getter method for last change
+	 *
 	 * @return last change of file or folder
 	 */
-	public Date getLastChange() { return lastChange; }
-	public String getOwner() { return owner; }
+	public Date getLastChange() {
+		return lastChange;
+	}
+
+	public String getOwner() {
+		return owner;
+	}
 
 	/**
 	 * getter method for isExecutable
+	 *
 	 * @return if file is executable
 	 */
-	public boolean isExecutable() {	return isExecutable; }
+	public boolean isExecutable() {
+		return isExecutable;
+	}
 
-	public String getPermissions() { return permissions; }
+	public String getPermissions() {
+		return permissions;
+	}
 
-	public boolean isHidden() { return isHidden; }
+	public boolean isHidden() {
+		return isHidden;
+	}
 
 	// getters/setters for view properties
 	/**
 	 * getter method for isSelected
+	 *
 	 * @return value of isSelected
 	 */
+	public boolean isSelected() {
+		return isSelected;
+	}
 
-	public boolean isSelected() { return isSelected; }
-	public void setSelected(boolean select) { isSelected = select; }
+	public void setSelected(boolean select) {
+		isSelected = select;
+	}
 
-	public boolean isUnfolded() { return isUnfolded; }
-	public void setUnfolded(boolean unfolded) { isUnfolded = unfolded; }
+	public boolean isUnfolded() {
+		return isUnfolded;
+	}
 
-	public int getLevel() { return level; }
+	public void setUnfolded(boolean unfolded) {
+		isUnfolded = unfolded;
+	}
 
-	public boolean exists() { return javaFile.exists(); }
+	public int getLevel() {
+		return level;
+	}
+
+	public boolean exists() {
+		return javaFile.exists();
+	}
 
 	/**
 	 * getter method for contents of folder
+	 *
 	 * @return linked list of contained files and folders
 	 */
-	public LinkedList<FileFolderObject> getContents() {	return contents; }
+	public LinkedList<FileFolderObject> getContents() {
+		return contents;
+	}
 
 	/**
 	 * getter method for specific file or folder
+	 *
 	 * @param index - index of file or folder
 	 * @return file or folder as FileFolderObject
 	 */
-	public FileFolderObject getContent(int index) {	return contents.get(index); }
-
+	public FileFolderObject getContent(int index) {
+		return contents.get(index);
+	}
 
 	/**
 	 * toString method for current folder
 	 */
-
 	public String toString() {
 		return this.name + " objects: " + Math.abs(this.size) + " Level: " + this.level + "\n";
 	}
 
 	/**
 	 * method to get entry of current file or folder
+	 *
 	 * @return linked list of entries
 	 */
-
 	public LinkedList<String> getEntry() {
 
 		LinkedList<String> result = new LinkedList<String>();
@@ -243,7 +289,7 @@ public class FileFolderObject implements Serializable {
 		String entrySize = isDirectory ? String.valueOf(size) : HelperFunctions.getReadableSize(size);
 		String entryOwner = owner;
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");
-		String entryLastChange = sdf.format(lastChange);		
+		String entryLastChange = sdf.format(lastChange);
 		String entryPermissions = permissions;
 
 		result.addAll(Arrays.asList(entryName, entrySize, entryOwner, entryLastChange, entryPermissions));
@@ -276,9 +322,8 @@ public class FileFolderObject implements Serializable {
 			}
 			for (int i = 0; i <= contents.size(); i++) {
 				if (i < contents.size()) {
-					temp = (int)HelperFunctions.getStringRect(g, contents.get(i).getName()).getWidth();
-				}
-				else {
+					temp = (int) HelperFunctions.getStringRect(g, contents.get(i).getName()).getWidth();
+				} else {
 					temp = HelperFunctions.getStringRect(g, Preferences.columnsCaptions.get(column)).width;
 				}
 				if (temp > result) {
@@ -289,14 +334,13 @@ public class FileFolderObject implements Serializable {
 		return result;
 	}
 
-
 	/**
 	 * getter of size for specific file or folder
+	 *
 	 * @param name - path to file or folder
 	 * @return size of file or folder in bytes
 	 */
-
-	public static long getSize (String name) {
+	public static long getSize(String name) {
 		long size = 0;
 		File thisFile = new File(name);
 		if (thisFile.isDirectory()) {
@@ -304,13 +348,11 @@ public class FileFolderObject implements Serializable {
 			for (int i = 0; i < content.length; i++) {
 				size += getSize(content[i].getAbsolutePath());
 			}
-		}
-		else {
+		} else {
 			size += thisFile.length();
 		}
 		return size;
 	}
-
 
 	public static boolean newFileFolder(boolean FileFolder, String name) {
 		boolean success = true;
@@ -320,13 +362,12 @@ public class FileFolderObject implements Serializable {
 				newFolder.mkdir();
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(new JFrame(),
-						"<html><center>Could not create new folder.<br/>" + e.getMessage() + "</center></html>", "Error",
-						JOptionPane.ERROR_MESSAGE);
+						"<html><center>Could not create new folder.<br/>" + e.getMessage() + "</center></html>",
+						"Error", JOptionPane.ERROR_MESSAGE);
 				System.out.println(e.getMessage());
 				success = false;
 			}
-		}
-		else {
+		} else {
 			File newFile = new File(name);
 			try {
 				newFile.createNewFile();
@@ -343,10 +384,10 @@ public class FileFolderObject implements Serializable {
 
 	/**
 	 * deletes file or folder
+	 *
 	 * @param name - path to file or folder
 	 * @return true if deleting succeeded
 	 */
-
 	public boolean delFileFolder(String name) {
 		boolean success = true;
 		File delFile = new File(name);
@@ -361,9 +402,10 @@ public class FileFolderObject implements Serializable {
 			delFile.delete();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(new JFrame(),
-					"<html><center>Could not delete file or folder.<br/>" + e.getMessage() + "</center></html>", "Error",
-					JOptionPane.ERROR_MESSAGE);
-			System.out.println(e.getMessage());;
+					"<html><center>Could not delete file or folder.<br/>" + e.getMessage() + "</center></html>",
+					"Error", JOptionPane.ERROR_MESSAGE);
+			System.out.println(e.getMessage());
+			;
 			success = false;
 		}
 		return success;
@@ -371,18 +413,18 @@ public class FileFolderObject implements Serializable {
 
 	/**
 	 * moves file or folder
-	 * @param name - path of existing file or folder
+	 *
+	 * @param name   - path of existing file or folder
 	 * @param target - path to new file or folder
 	 * @return true if moving succeeded
 	 */
-
-	public boolean moveFileFolder (String name, String target) {
+	public boolean moveFileFolder(String name, String target) {
 		boolean success = true;
-		//	File moveFile = new File(name);
-		//	File targetFile = new File(target);
+		// File moveFile = new File(name);
+		// File targetFile = new File(target);
 		try {
 
-			//moveFile.renameTo(targetFile);
+			// moveFile.renameTo(targetFile);
 			CopyStatus status = new CopyStatus();
 			copyFileFolder(false, status, name, target);
 			delFileFolder(name);
@@ -396,18 +438,18 @@ public class FileFolderObject implements Serializable {
 		return success;
 	}
 
-	CopyProgress prog;
-	boolean showDialog = true;
 	/**
 	 * copies file or folder
-	 * @param rec - true if method is called recursively
+	 *
+	 * @param rec    - true if method is called recursively
 	 * @param status - CopyStatus to print status of copying
-	 * @param name - path to existing file or folder
+	 * @param name   - path to existing file or folder
 	 * @param target - path to new file or folder
 	 * @return true if copying suceeded
 	 */
-	public boolean copyFileFolder (final boolean rec, final CopyStatus status, final String name, final String target) {
-		final boolean success = true;
+	public boolean copyFileFolder(final boolean rec, final CopyStatus status, final String name, final String target) {
+
+		boolean success = true;
 
 		try {
 			Thread copy = new Thread(new Runnable() {
@@ -424,9 +466,9 @@ public class FileFolderObject implements Serializable {
 
 					if (freespace > completesize) {
 						if (!rec) {
-							System.out.println ("Starting copying of " + completesize + " Bytes..");
+							System.out.println("Starting copying of " + completesize + " Bytes..");
 							status.makeStatus(completesize);
-							if (completesize < 1000*1000) {
+							if (completesize < 1000 * 1000) {
 								showDialog = false;
 							}
 							if (showDialog) {
@@ -434,31 +476,30 @@ public class FileFolderObject implements Serializable {
 								prog.createComponents(new FileFolderObject(name, 0));
 							}
 
-
 						}
 						if (isDir) {
 							File[] content = copyFile.listFiles();
 							for (int i = 0; i < content.length; i++) {
-								copyFileFolder (true, status, name + File.separator + content[i].getName(), target + "/" + content[i].getName());
+								copyFileFolder(true, status, name + File.separator + content[i].getName(),
+										target + "/" + content[i].getName());
 							}
 						} else {
-							FileChannel inChannel;
 							try {
-								inChannel = new FileInputStream(copyFile).getChannel();
+								FileInputStream inStream = new FileInputStream(copyFile);
+								FileOutputStream outStream = new FileOutputStream(targetFile);
 
-								FileChannel outChannel;
-
-								outChannel = new FileOutputStream(targetFile).getChannel();
-
+								FileChannel inChannel = inStream.getChannel();
+								FileChannel outChannel = outStream.getChannel();
 								inChannel.transferTo(0, inChannel.size(), outChannel);
+
+								outStream.close();
+								inStream.close();
 							} catch (Exception e) {
 								System.out.println(e.getMessage());
 							}
-							long thissize;
+							long thissize = 0;
 							if (!copyFile.isDirectory()) {
 								thissize = copyFile.length();
-							} else {
-								thissize = 0;
 							}
 							status.sendStatus(thissize);
 							String stat = status.askStatus();
@@ -470,15 +511,13 @@ public class FileFolderObject implements Serializable {
 							}
 						}
 						if (!rec) {
-							System.out.println ("Done.");
+							System.out.println("Done.");
 							if (showDialog) {
 								prog.killDialog();
 							}
 						}
 					} else {
-
-						//throw(new Exception("Not enough free space!"));
-
+						 throw new RuntimeException("Not enough free space!");
 					}
 
 				}
@@ -489,20 +528,20 @@ public class FileFolderObject implements Serializable {
 					"<html><center>Could not copy files.<br/>" + e.getMessage() + "</center></html>", "Error",
 					JOptionPane.ERROR_MESSAGE);
 			System.out.println(e.getMessage());
-			//success = false;
+			success = false;
 		}
 
 		return success;
 	}
 
-	public boolean copyFile (LinkedList<FileFolderObject> source, FileFolderObject target) {
+	public boolean copyFile(LinkedList<FileFolderObject> source, FileFolderObject target) {
 		boolean success;
 		try {
 
 			CopyStatus status = new CopyStatus();
 			if (source.size() == 0) {
 
-				//success = copyFileFolder(false, status, this.getName(), target.getName());
+				// success = copyFileFolder(false, status, this.getName(), target.getName());
 
 			} else {
 				if (!target.isDirectory()) {
@@ -511,9 +550,8 @@ public class FileFolderObject implements Serializable {
 
 						success = copyFileFolder(false, status, source.get(0).getName(), target.getName());
 					} else {
-						throw(new Exception("Mission Impossible: cannot copy dir into file!"));
+						throw (new Exception("Mission Impossible: cannot copy dir into file!"));
 					}
-
 
 				} else {
 
@@ -537,7 +575,6 @@ public class FileFolderObject implements Serializable {
 		}
 		success = false;
 		return success;
-
 
 	}
 }

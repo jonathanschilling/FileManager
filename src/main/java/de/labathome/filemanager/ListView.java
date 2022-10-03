@@ -16,8 +16,7 @@ import javax.swing.JPanel;
 
 import de.labathome.filemanager.HelperFunctions.ViewMode;
 
-public class ListView extends JPanel implements MouseListener,
-MouseMotionListener {
+public class ListView extends JPanel implements MouseListener, MouseMotionListener {
 
 	private static final long serialVersionUID = 1L;
 
@@ -35,7 +34,7 @@ MouseMotionListener {
 	public boolean mousePressed;
 	public boolean findMouseClick;
 
-	private BufferedImage bufferedImage = null;	
+	private BufferedImage bufferedImage = null;
 
 	private int width, height;
 
@@ -48,13 +47,15 @@ MouseMotionListener {
 	private boolean somethingIsDragged = false;
 	private boolean dropTargetFound = false;
 	private boolean somethingWasUnfolded = true;
-	private boolean mouseJustReleased = false;
+//	private boolean mouseJustReleased = false;
 
 	private Rectangle draggedRect;
 
 	/**
 	 * constructor for a new list view
-	 * @param newPrefs - the central preferences of the filemanager that contains this list view
+	 *
+	 * @param newPrefs - the central preferences of the filemanager that contains
+	 *                 this list view
 	 */
 	public ListView(Preferences newPrefs) {
 
@@ -82,7 +83,7 @@ MouseMotionListener {
 		drawDragRect = false;
 		somethingWasUnfolded = true;
 
-		//draggedFfos = new LinkedList<FileFolderObject>();
+		// draggedFfos = new LinkedList<FileFolderObject>();
 
 		width = 1024;
 		height = 768;
@@ -92,20 +93,19 @@ MouseMotionListener {
 		this.addMouseMotionListener(this);
 	}
 
-
 	/**
 	 * paint the listview using double buffering
 	 */
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		Graphics2D g2 = (Graphics2D)g;
+		Graphics2D g2 = (Graphics2D) g;
 
 		if (bufferedImage == null) {
 
 			int w = this.getWidth();
 			int h = this.getHeight();
-			bufferedImage = (BufferedImage)this.createImage(w, h);
+			bufferedImage = (BufferedImage) this.createImage(w, h);
 			Graphics2D gc = bufferedImage.createGraphics();
 			gc.setColor(prefs.backgroundColor);
 			gc.fillRect(0, 0, w, h);
@@ -118,6 +118,7 @@ MouseMotionListener {
 
 	/**
 	 * paint the actual file list onto the buffer image
+	 *
 	 * @param g
 	 */
 	public void paintFileList(Graphics2D g) {
@@ -125,7 +126,7 @@ MouseMotionListener {
 		// draw file list
 		if (prefs.currentDir != null) {
 
-			myStatusBar.caption = prefs.currentDir.getName() + ", "	+ prefs.currentDir.getEntry().get(1) + " Items";
+			myStatusBar.caption = prefs.currentDir.getName() + ", " + prefs.currentDir.getEntry().get(1) + " Items";
 			myStatusBar.paint(g);
 
 			// compute rubberBand
@@ -135,8 +136,7 @@ MouseMotionListener {
 
 			prefs.currentDir.loadContents();
 
-			//entry = prefs.currentDir.getEntry();
-
+			// entry = prefs.currentDir.getEntry();
 
 			// compute position of icons and filenames and store them in the ffos
 			if (prefs.currentViewMode == HelperFunctions.ViewMode.DetailedView) {
@@ -151,31 +151,26 @@ MouseMotionListener {
 				prepareSymbolView(g);
 			}
 
-
-			// now check for intersections with a dragged rectangle or a dragging mouse and select the items
+			// now check for intersections with a dragged rectangle or a dragging mouse and
+			// select the items
 			boolean mouseInsideItemShadow = false;
-			//boolean itemInDragRect = false;
+			// boolean itemInDragRect = false;
 			boolean mouseInsideArrowRect = false;
 
 			FileFolderObject ffo;
-
-
-
 
 			for (int i = 0; i < prefs.currentDir.getContents().size(); i++) {
 
 				ffo = prefs.currentDir.getContent(i);
 
-
 				mouseInsideItemShadow = (ffo.getNameRect().contains(mouseUp) || ffo.getIconRect().contains(mouseUp));
 				if (prefs.currentViewMode == ViewMode.DetailedView) {
 					mouseInsideArrowRect = ffo.getArrowRect().contains(mouseUp);
-				}
-				else {
+				} else {
 					mouseInsideArrowRect = false;
 				}
-				//itemInDragRect = (dragRect.intersects(ffo.getNameRect()) || dragRect.intersects(ffo.getIconRect()));
-
+				// itemInDragRect = (dragRect.intersects(ffo.getNameRect()) ||
+				// dragRect.intersects(ffo.getIconRect()));
 
 				// check where the mousePress event was and select appropriate
 				if (findMouseClick) {
@@ -199,7 +194,6 @@ MouseMotionListener {
 
 					if (ffo.isSelected() && !mouseInsideItemShadow && draggedFfo == null) {
 
-
 						ffo.isDragged = true;
 
 						draggedFfo = ffo;
@@ -212,8 +206,7 @@ MouseMotionListener {
 
 						if (prefs.currentViewMode == ViewMode.SymbolView) {
 							draggedRect = new Rectangle(mouseUp.x - 16, mouseUp.y - 16, 32, 32);
-						}
-						else {
+						} else {
 							draggedRect = new Rectangle(mouseUp.x - 8, mouseUp.y - 8, 16, 16);
 						}
 
@@ -228,7 +221,6 @@ MouseMotionListener {
 
 						}
 					}
-
 
 				}
 			}
@@ -246,8 +238,7 @@ MouseMotionListener {
 			// draw rubberBand above all other items
 			if (mousePressed && drawDragRect) {
 				g.setColor(prefs.selectRectColor);
-				g.drawRect(dragRect.x, dragRect.y, dragRect.width,
-						dragRect.height);
+				g.drawRect(dragRect.x, dragRect.y, dragRect.width, dragRect.height);
 				drawDragRect = false;
 
 			}
@@ -257,6 +248,7 @@ MouseMotionListener {
 
 	/**
 	 * actually paint the items in the current view mode
+	 *
 	 * @param g - in which Graphics to paint
 	 */
 	private void paintViewMode(Graphics g) {
@@ -292,13 +284,13 @@ MouseMotionListener {
 		return result;
 	}
 
-	/** 
-	 * prepare file list in detailed mode
-	 * this means: compute the position of the item's: string rect, icon rect and arrow rect
+	/**
+	 * prepare file list in detailed mode this means: compute the position of the
+	 * item's: string rect, icon rect and arrow rect
+	 *
 	 * @param g - Graphics to use
 	 */
 	private void prepareDetailedView(Graphics2D g) {
-
 
 		// basic constants for detailed list view
 		final int rowStart = 5;
@@ -317,12 +309,10 @@ MouseMotionListener {
 
 		int numExpanded = getExpandedRecursive(ffo, 0);
 
-
 		if ((numExpanded) * rowHeight > g.getClipBounds().height) {
 			height = (rowHeight * (numExpanded + 1) + 30);
 			this.revalidate();
 		}
-
 
 		int xPosition = 0;
 		int xWidth = 0;
@@ -340,7 +330,8 @@ MouseMotionListener {
 		}
 	}
 
-	private int prepareRecursive(Graphics g, ListViewItem item, int currentYPos, FileFolderObject ffo, int numAlreadyExpanded) {
+	private int prepareRecursive(Graphics g, ListViewItem item, int currentYPos, FileFolderObject ffo,
+			int numAlreadyExpanded) {
 
 		int num = 0;
 		final int columnStart = 4;
@@ -352,7 +343,7 @@ MouseMotionListener {
 
 		int x = 0;
 		int y = currentYPos;
-		
+
 		int result = 0;
 
 		if (ffo.isDirectory()) {
@@ -361,19 +352,18 @@ MouseMotionListener {
 			result = num;
 
 			for (int i = 0; i < num; i++) {
-	
+
 				x = (Math.abs(ffo.getLevel())) * indentIncrement + columnStart;
 
 				y += rowHeight;
-				
-				Point p = new Point(x, y);
-				
-				item.prepare(g, ffo.getContent(i), p);
 
+				Point p = new Point(x, y);
+
+				item.prepare(g, ffo.getContent(i), p);
 
 				if (ffo.getContent(i).isUnfolded()) {
 					result = prepareRecursive(g, item, y, ffo.getContent(i), 0);
-					y += result * rowHeight; 
+					y += result * rowHeight;
 				}
 			}
 		}
@@ -381,13 +371,13 @@ MouseMotionListener {
 		return result;
 	}
 
-	/** 
-	 * prepare file list in list mode
-	 * this means: compute the position of the item's: string rect and icon rect
+	/**
+	 * prepare file list in list mode this means: compute the position of the
+	 * item's: string rect and icon rect
+	 *
 	 * @param g - Graphics to use
 	 */
 	private void prepareListView(Graphics2D g) {
-
 
 		// basic constants for detailed list view
 		final int columnStart = 3;
@@ -416,15 +406,16 @@ MouseMotionListener {
 		for (int i = 0; i < numFiles; i++) {
 
 			p.x = columnStart;
-			p.y = rowStart + (i * rowHeight); 
+			p.y = rowStart + (i * rowHeight);
 
 			item.prepare(g, prefs.currentDir.getContent(i), p);
 		}
 	}
 
-	/** 
-	 * prepare file list in symbol mode
-	 * this means: compute the position of the item's: string rect and icon rect
+	/**
+	 * prepare file list in symbol mode this means: compute the position of the
+	 * item's: string rect and icon rect
+	 *
 	 * @param g - Graphics to use
 	 */
 	private void prepareSymbolView(Graphics2D g) {
@@ -450,17 +441,15 @@ MouseMotionListener {
 
 		if (numHorizontal > 0) {
 
-			height = (int)(gridSizeVertical * (Math.ceil(numFiles / numHorizontal))) + 100;
+			height = (int) (gridSizeVertical * (Math.ceil(numFiles / numHorizontal))) + 100;
 			this.revalidate();
-
 
 			// iterate over entries
 			for (int i = 0; i < numFiles; i++) {
 
 				// position of icon in grid
 				p.x = (i % numHorizontal) * gridSizeHorizontal + (gridSizeHorizontal / 2);
-				p.y = (i / numHorizontal) * gridSizeVertical  + gridSpace + myStatusBar.bottom();
-
+				p.y = (i / numHorizontal) * gridSizeVertical + gridSpace + myStatusBar.bottom();
 
 				item.prepare(g, prefs.currentDir.getContent(i), p);
 			}
@@ -475,7 +464,7 @@ MouseMotionListener {
 		mouseDown = e.getPoint();
 		mouseUp = mouseDown;
 
-		//mousePressed = false;
+		// mousePressed = false;
 
 		// find out where the user clicked and tell the corresponding widget
 		// about it
@@ -484,20 +473,20 @@ MouseMotionListener {
 
 		}
 
-		else if (prefs.currentViewMode == HelperFunctions.ViewMode.DetailedView && myPropertiesBar.contains(mouseDown)) {
+		else if (prefs.currentViewMode == HelperFunctions.ViewMode.DetailedView
+				&& myPropertiesBar.contains(mouseDown)) {
 			myPropertiesBar.clickMouse(e);
 
 		}
 
 		else {
 			// in the paint routines, find out if mouseDown pointed on something important
-			//findMouseClick = true;
+			// findMouseClick = true;
 		}
 
-		//this.revalidate();
+		// this.revalidate();
 		this.repaint();
 	}
-
 
 	/**
 	 * mouse is pressed, check if this means anything to us
@@ -506,7 +495,7 @@ MouseMotionListener {
 
 		mousePressed = true;
 		findMouseClick = true;
-		mouseJustReleased = false;
+//		mouseJustReleased = false;
 
 		mouseDown = arg0.getPoint();
 		mouseUp = mouseDown;
@@ -519,7 +508,6 @@ MouseMotionListener {
 	 */
 	public void mouseDragged(MouseEvent arg0) {
 
-
 		mouseDragging = true;
 		mouseUp = arg0.getPoint();
 
@@ -527,7 +515,8 @@ MouseMotionListener {
 	}
 
 	/**
-	 * mouse was released, so get up and do something if the user has p.ex. dragged and dropped some poor file or folder
+	 * mouse was released, so get up and do something if the user has p.ex. dragged
+	 * and dropped some poor file or folder
 	 */
 	public void mouseReleased(MouseEvent arg0) {
 
@@ -535,14 +524,13 @@ MouseMotionListener {
 		mouseDragging = false;
 		somethingIsDragged = false;
 
-		mouseJustReleased = true;	
+//		mouseJustReleased = true;
 
-		mouseUp = arg0.getPoint();	
+		mouseUp = arg0.getPoint();
 
 		repaint();
 
-		if (dropTargetFound || somethingWasUnfolded) { 
-
+		if (dropTargetFound || somethingWasUnfolded) {
 
 			if (dropTargetFound) {
 
@@ -555,15 +543,13 @@ MouseMotionListener {
 				String fileName = draggedFfo.getName().split("/")[draggedFfo.getName().split("/").length - 1];
 
 				CopyStatus cps = new CopyStatus();
-				draggedFfo.copyFileFolder(false, cps, draggedFfo.getName(), targetFfo.getName() + File.separator + fileName);
-				
+				draggedFfo.copyFileFolder(false, cps, draggedFfo.getName(),
+						targetFfo.getName() + File.separator + fileName);
 
 				prefs.currentDir.updateContents();
-			}
-			else if (somethingWasUnfolded) {
+			} else if (somethingWasUnfolded) {
 				loadContentsRecursive(prefs.currentDir);
 			}
-
 
 			draggedFfo = null;
 			targetFfo = null;
@@ -583,19 +569,23 @@ MouseMotionListener {
 		}
 	}
 
+	/**
+	 * unused
+	 */
+	public void mouseMoved(MouseEvent arg0) {
+	}
 
 	/**
 	 * unused
 	 */
-	public void mouseMoved(MouseEvent arg0) {}
+	public void mouseEntered(MouseEvent arg0) {
+	}
+
 	/**
 	 * unused
 	 */
-	public void mouseEntered(MouseEvent arg0) {}
-	/**
-	 * unused
-	 */
-	public void mouseExited(MouseEvent arg0) {}
+	public void mouseExited(MouseEvent arg0) {
+	}
 
 	/**
 	 * get the preferred size according to number of listed files and view mode
