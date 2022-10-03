@@ -127,6 +127,7 @@ public class FileManager extends JFrame implements ActionListener {
 		Container content = this.getContentPane();
 		scrollPane = new JScrollPane(listView, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
 		// scrollPane.setMouseWheelIncrement(20); // scroll more than 1 pixel per
 		// mouseWheelEvent
 		content.add(scrollPane, BorderLayout.CENTER);

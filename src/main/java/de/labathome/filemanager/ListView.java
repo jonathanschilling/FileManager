@@ -11,6 +11,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.LinkedList;
+import java.util.Stack;
 
 import javax.swing.JPanel;
 
@@ -175,11 +176,22 @@ public class ListView extends JPanel implements MouseListener, MouseMotionListen
 						ffo.setUnfolded(!ffo.isUnfolded());
 						somethingWasUnfolded = true;
 					}
-					if (ffo.isDirectory()) {
-						for (int j = 0; j < ffo.getContents().size(); j++) {
-							if (ffo.getContent(j).getArrowRect().contains(mouseUp)) {
-								ffo.getContent(j).setUnfolded(!ffo.getContent(j).isUnfolded());
-								somethingWasUnfolded = true;
+
+					Stack<FileFolderObject> toCheckForInteraction = new Stack<>();
+					toCheckForInteraction.push(ffo);
+
+					while (!toCheckForInteraction.isEmpty()) {
+						FileFolderObject toCheck = toCheckForInteraction.pop();
+						if (toCheck.isDirectory() && toCheck.isUnfolded()) {
+							for (int j = 0; j < toCheck.getContents().size(); j++) {
+								FileFolderObject ffoJ = toCheck.getContent(j);
+								if (ffoJ.isDirectory()) {
+									toCheckForInteraction.push(ffoJ);
+								    if (ffoJ.getArrowRect().contains(mouseUp)) {
+								    	ffoJ.setUnfolded(!ffoJ.isUnfolded());
+								    	somethingWasUnfolded = true;
+								    }
+								}
 							}
 						}
 					}
@@ -236,9 +248,9 @@ public class ListView extends JPanel implements MouseListener, MouseMotionListen
 				g.setColor(prefs.selectRectColor);
 				g.drawRect(dragRect.x, dragRect.y, dragRect.width, dragRect.height);
 				drawDragRect = false;
-
 			}
 		}
+
 		findMouseClick = false;
 	}
 
@@ -348,7 +360,6 @@ public class ListView extends JPanel implements MouseListener, MouseMotionListen
 
 			for (int i = 0; i < nElemInFFO; i++) {
 				FileFolderObject nestedFFO = ffo.getContent(i);
-
 
 				x = (Math.abs(ffo.getLevel())) * indentIncrement + columnStart;
 
