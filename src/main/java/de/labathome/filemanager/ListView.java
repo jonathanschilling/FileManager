@@ -141,13 +141,9 @@ public class ListView extends JPanel implements MouseListener, MouseMotionListen
 			// compute position of icons and filenames and store them in the ffos
 			if (prefs.currentViewMode == HelperFunctions.ViewMode.DetailedView) {
 				prepareDetailedView(g);
-			}
-
-			else if (prefs.currentViewMode == HelperFunctions.ViewMode.ListView) {
+			} else if (prefs.currentViewMode == HelperFunctions.ViewMode.ListView) {
 				prepareListView(g);
-			}
-
-			else if (prefs.currentViewMode == HelperFunctions.ViewMode.SymbolView) {
+			} else if (prefs.currentViewMode == HelperFunctions.ViewMode.SymbolView) {
 				prepareSymbolView(g);
 			}
 
@@ -310,7 +306,8 @@ public class ListView extends JPanel implements MouseListener, MouseMotionListen
 		int numExpanded = getExpandedRecursive(ffo, 0);
 
 		if ((numExpanded) * rowHeight > g.getClipBounds().height) {
-			height = (rowHeight * (numExpanded + 1) + 30);
+			// recompute height of this widget if paint area is too small for items to be shown
+			height = rowHeight * (numExpanded + 1) + 30;
 			this.revalidate();
 		}
 
@@ -319,7 +316,7 @@ public class ListView extends JPanel implements MouseListener, MouseMotionListen
 
 		myPropertiesBar.setTopLeft(new Point(0, myStatusBar.bottom()));
 
-		prepareRecursive(g, item, y, ffo, 0);
+		prepareRecursive(g, item, y, ffo);
 
 		for (int i = 0; i < Preferences.columnsCaptions.size(); i++) {
 
@@ -330,10 +327,8 @@ public class ListView extends JPanel implements MouseListener, MouseMotionListen
 		}
 	}
 
-	private int prepareRecursive(Graphics g, ListViewItem item, int currentYPos, FileFolderObject ffo,
-			int numAlreadyExpanded) {
+	private int prepareRecursive(Graphics g, ListViewItem item, int currentYPos, FileFolderObject ffo) {
 
-		int num = 0;
 		final int columnStart = 4;
 		final int rowFreeSpace = 5;
 		final int textFreeSpace = 4;
@@ -348,10 +343,12 @@ public class ListView extends JPanel implements MouseListener, MouseMotionListen
 
 		if (ffo.isDirectory()) {
 
-			num = ffo.getContents().size();
-			result = num;
+			int nElemInFFO = ffo.getContents().size();
+			result = nElemInFFO;
 
-			for (int i = 0; i < num; i++) {
+			for (int i = 0; i < nElemInFFO; i++) {
+				FileFolderObject nestedFFO = ffo.getContent(i);
+
 
 				x = (Math.abs(ffo.getLevel())) * indentIncrement + columnStart;
 
@@ -359,11 +356,12 @@ public class ListView extends JPanel implements MouseListener, MouseMotionListen
 
 				Point p = new Point(x, y);
 
-				item.prepare(g, ffo.getContent(i), p);
+				item.prepare(g, nestedFFO, p);
 
-				if (ffo.getContent(i).isUnfolded()) {
-					result = prepareRecursive(g, item, y, ffo.getContent(i), 0);
-					y += result * rowHeight;
+				if (nestedFFO.isUnfolded()) {
+					int nInNested = prepareRecursive(g, item, y, nestedFFO);
+					y += nInNested * rowHeight;
+					result += nInNested;
 				}
 			}
 		}
