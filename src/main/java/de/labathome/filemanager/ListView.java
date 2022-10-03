@@ -277,14 +277,25 @@ public class ListView extends JPanel implements MouseListener, MouseMotionListen
 		}
 	}
 
-	private int getExpandedRecursive(FileFolderObject ffo, int current) {
+	/**
+	 * Get number of visible items within given FFO.
+	 *
+	 * @param ffoToCheck
+	 * @return
+	 */
+	private int getNumExpanded(FileFolderObject ffoToCheck) {
 		int result = 0;
 
-		if (ffo.isDirectory()) {
-			result = ffo.getContents().size();
-			if (ffo.isUnfolded()) {
-				for (int i = 0; i < ffo.getContents().size(); i++) {
-					result += getExpandedRecursive(ffo.getContent(i), current);
+		Stack<FileFolderObject> toCheck = new Stack<>();
+		toCheck.push(ffoToCheck);
+
+		while (!toCheck.isEmpty()) {
+			FileFolderObject ffo = toCheck.pop();
+
+			if (ffo.isDirectory()) {
+				result += ffo.getContents().size();
+				if (ffo.isUnfolded()) {
+					toCheck.addAll(ffo.getContents());
 				}
 			}
 		}
@@ -315,9 +326,9 @@ public class ListView extends JPanel implements MouseListener, MouseMotionListen
 
 		int y = myPropertiesBar.bottom() + rowStart;
 
-		int numExpanded = getExpandedRecursive(ffo, 0);
+		int numExpanded = getNumExpanded(ffo);
 
-		if ((numExpanded) * rowHeight > g.getClipBounds().height) {
+		if (numExpanded * rowHeight > g.getClipBounds().height) {
 			// recompute height of this widget if paint area is too small for items to be shown
 			height = rowHeight * (numExpanded + 1) + 30;
 			this.revalidate();
@@ -339,6 +350,16 @@ public class ListView extends JPanel implements MouseListener, MouseMotionListen
 		}
 	}
 
+	/**
+	 * TODO: rewrite as non-recursive function
+	 * TODO: result, y can be unified
+	 *
+	 * @param g
+	 * @param item
+	 * @param currentYPos
+	 * @param ffo
+	 * @return
+	 */
 	private int prepareRecursive(Graphics g, ListViewItem item, int currentYPos, FileFolderObject ffo) {
 
 		final int columnStart = 4;
