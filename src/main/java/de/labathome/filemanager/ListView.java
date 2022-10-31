@@ -156,6 +156,8 @@ public class ListView extends JPanel implements MouseListener, MouseMotionListen
 
 			FileFolderObject ffo;
 
+			// TODO: need to iterate over all visible items (potentially including many subfolders),
+			// not all elements in current dir
 			for (int i = 0; i < prefs.currentDir.getContents().size(); i++) {
 
 				ffo = prefs.currentDir.getContent(i);
